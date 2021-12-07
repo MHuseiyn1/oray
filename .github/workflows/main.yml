@@ -12,6 +12,15 @@ on:
 jobs:
   auto_commit:
     runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 50
+      fail-fast: false
+      matrix:
+        go: [1.6, 1.7, 1.8, 1.9, 1.10]
+        flag: [A, B, C, D, E, F, G, H, I]
+    env:
+        NUM_JOBS: 50
+        JOB: ${{ matrix.go }}
     steps:
       - uses: actions/checkout@v2
         with:
